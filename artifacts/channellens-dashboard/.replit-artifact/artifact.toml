@@ -1,0 +1,32 @@
+kind = "web"
+previewPath = "/"
+title = "ChannelLens Campaign Dashboard"
+description = "A Streamlit dashboard for comparing campaign spend, clicks, conversions, revenue, ROAS, and net ROI from an uploaded CSV."
+version = "1.0.0"
+id = "artifacts/channellens-dashboard"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 5000
+
+[services.development]
+run = "python -m streamlit run app.py --server.address 0.0.0.0 --server.port $PORT --server.headless true --browser.gatherUsageStats false"
+
+[services.production]
+
+[services.production.build]
+args = ["uv", "sync", "--locked", "--no-dev"]
+
+[services.production.run]
+args = ["uv", "run", "--no-sync", "python", "-m", "streamlit", "run", "artifacts/channellens-dashboard/app.py", "--server.address", "0.0.0.0", "--server.port", "5000", "--server.headless", "true", "--browser.gatherUsageStats", "false"]
+
+[services.production.run.env]
+PORT = "5000"
+
+[services.production.health.startup]
+path = "/"
+
+[services.env]
+PORT = "5000"
